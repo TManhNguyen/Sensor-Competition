@@ -1,5 +1,5 @@
 #define BLYNK_TEMPLATE_ID "TMPLdP-Z23DH"
-#define BLYNK_DEVICE_NAME "Competition"
+#define BLYNK_DEVICE_NAME "Competition1A Team 1"
 #define BLYNK_AUTH_TOKEN "qd_pLBMjkiFF6Pq4s6S6dLFzXl3m9tEg"
 #define BLYNK_PRINT Serial
 
@@ -27,7 +27,9 @@ int maxDistanceArray[] = {9, 38, 13, 37, 10};
 int virtualLEDPinArray[] = {V8, V9, V10, V11, V12};
 int trialPinArray[] = {V0, V1, V2};
 boolean state = false;
-int point = 0;
+int LEDTrialPoint[] = {0, 0, 0};
+int soundTrialPoint[] = {0, 0, 0};
+int point[] = {0, 0 , 0};
 int trial = -1;
 int timer = 0;
 #define SOUND_SPEED 0.034
@@ -57,7 +59,6 @@ BLYNK_WRITE(V6)
   if (param.asInt() == 1) {
     state = false;
     trial = trial + 1;
-    point = 0;
     for (int i = 0; i < 5; i++) {
       timer = 0;
       while (state == false) {
@@ -67,8 +68,8 @@ BLYNK_WRITE(V6)
           goto bailout;
         }
       }
-      point = point + 1;
-      Blynk.virtualWrite(trialPinArray[trial], point);
+      point[trial] = point[trial] + 1;
+      Blynk.virtualWrite(trialPinArray[trial], point[trial]);
       Blynk.virtualWrite(virtualLEDPinArray[i], 1);
       state = false;
       delay(1500);
@@ -88,13 +89,12 @@ BLYNK_WRITE(V6)
       state = false;
       delay(1500);
     }
-    point = point + 3;
-    Blynk.virtualWrite(trialPinArray[trial], point);
+    point[trial] = point[trial] + 3;
+    Blynk.virtualWrite(trialPinArray[trial], point[trial]);
     resetLED();
   }
 bailout:
   resetLED();
-  point = 0;
   Blynk.virtualWrite(V6, 0);
 }
 
@@ -125,6 +125,41 @@ BLYNK_WRITE(V5)
   }
 }
 
+BLYNK_WRITE(V24)
+{
+  LEDTrialPoint[0] = param.asInt();
+  Blynk.virtualWrite(trialPinArray[0], point[trial]+LEDTrialPoint[0]+soundTrialPoint[0]);
+}
+
+BLYNK_WRITE(V25)
+{
+  LEDTrialPoint[1] = param.asInt();
+  Blynk.virtualWrite(trialPinArray[1], point[trial]+LEDTrialPoint[1]+soundTrialPoint[1]);
+}
+
+BLYNK_WRITE(V26)
+{
+  LEDTrialPoint[2] = param.asInt();
+  Blynk.virtualWrite(trialPinArray[2], point[trial]+LEDTrialPoint[2]+soundTrialPoint[2]);
+}
+
+BLYNK_WRITE(V27)
+{
+  soundTrialPoint[0] = param.asInt()*2;
+  Blynk.virtualWrite(trialPinArray[0], point[trial]+LEDTrialPoint[0]+soundTrialPoint[0]);
+}
+
+BLYNK_WRITE(V28)
+{
+  soundTrialPoint[1] = param.asInt()*2;
+  Blynk.virtualWrite(trialPinArray[1], point[trial]+LEDTrialPoint[1]+soundTrialPoint[1]);
+}
+
+BLYNK_WRITE(V29)
+{
+  soundTrialPoint[2] = param.asInt()*2;
+  Blynk.virtualWrite(trialPinArray[2], point[trial]+LEDTrialPoint[2]+soundTrialPoint[2]);
+}
 
 void resetLED() {
   for (int i = 0; i < 5; i++) {
