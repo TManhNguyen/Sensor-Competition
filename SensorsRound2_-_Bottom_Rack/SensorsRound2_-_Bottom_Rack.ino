@@ -23,7 +23,7 @@ int trigPin3 = D8;
 
 int sensorArray[] = {D0, D1, D2, D3, D4};
 int trigArray[] = {D5, D5, D6, D7, D8};
-int minDistanceArray[] = {10, 5, 0, 0, 5}; //Update distance
+int minDistanceArray[] = {8, 3, 0, 0, 10}; //Update distance
 int maxDistanceArray[] = {18, 13, 10, 10, 18}; //Update distance
 //change this for each team
 int virtualLEDPinArray[] = {V0, V1, V2, V3, V4};

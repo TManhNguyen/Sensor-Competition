@@ -10,22 +10,24 @@ char auth[] = BLYNK_AUTH_TOKEN;
 char ssid[] = "Hotspotify";
 char pass[] = "huhuhuhu";
 
-int echoPin0 = D5;
+int echoPin0 = D0;
 int echoPin1 = D1;
-int echoPin2 = D4;
-int echoPin3 = D2;
-int echoPin4 = D3;
-int trigPin0 = D6;
-int trigPin1 = D7;
-int trigPin2 = D8;
+int echoPin2 = D2;
+int echoPin3 = D3;
+int echoPin4 = D4;
+int trigPin0 = D5;
+int trigPin1 = D6;
+int trigPin2 = D7;
+int trigPin3 = D8;
 
-int sensorArray[] = {D5, D1, D4, D2, D3}; // change to match the order 
-int trigArray[] = {D7, D8, D8, D6, D7}; //Change sensor 3 -> D6
-int minDistanceArray[] = {2, 29, 4, 28, 1}; //Update distance
-int maxDistanceArray[] = {10, 37, 12, 36, 9}; //Update distance
+
+int sensorArray[] = {D0, D1, D2, D3, D4};
+int trigArray[] = {D5, D5, D6, D7, D8};
+int minDistanceArray[] = {8, 3, 0, 0, 10}; //Update distance
+int maxDistanceArray[] = {18, 13, 10, 10, 18}; //Update distance
 //change this for each team
 int virtualLEDPinArray[] = {V0, V1, V2, V3, V4};
-int trialPinArray[] = {V0, V5, V6, V7};
+int trialPinArray[] = {V15, V5, V6, V7};
 boolean state = false;
 int conditionalPoint = 0;
 int soundPoint = 0;
@@ -48,6 +50,7 @@ void setup()
   pinMode(trigPin0, OUTPUT);
   pinMode(trigPin1, OUTPUT);
   pinMode(trigPin2, OUTPUT);
+  pinMode(trigPin3, OUTPUT);
   Blynk.begin(auth, ssid, pass);
 }
 
@@ -63,13 +66,13 @@ BLYNK_WRITE(V13)
     resetLED();
     delay(100);
     state = false;
-    //Measure 4+5
+    //Measure 1+2
     for (int i = 0; i < 2; i++) {
       timer = 0;
       while (state == false) {
         state = measureSensor(sensorArray[i], trigArray[i], minDistanceArray[i], maxDistanceArray[i]);
         timer = timer + 1;
-        if (timer > 140) {
+        if (timer > 300) {
           goto bailout;
         }
       }
@@ -80,38 +83,36 @@ BLYNK_WRITE(V13)
       delay(1000);
     }
 
-    //Measure 3/1
+    //Measure 3/44
     state = false;
     timer = 0;
     while (state == false) {
       boolean state2 = measureSensor(sensorArray[2], trigArray[2], minDistanceArray[2], maxDistanceArray[2]);
-      state = (state || state2);
+      state = (state == true || state2 == true);
       if (state2 == true)
       {
         Blynk.virtualWrite(virtualLEDPinArray[2], 1);
       }
       boolean state3 = measureSensor(sensorArray[3], trigArray[3], minDistanceArray[3], maxDistanceArray[3]);
-      state = (state || state3);
+      state = (state == true || state3 == true);
       if (state3 == true)
       {
-        Blynk.virtualWrite(virtualLEDPinArray[3], 1);
       }
       timer = timer + 1;
-      if (timer > 200) {
+      if (timer > 400) {
         goto bailout;
       }
     }
     point[trial] = point[trial] + 2;
     Blynk.virtualWrite(trialPinArray[trial], point[trial]);
 
-
-    //Measure 2
+    //Measure 5
     state = false;
     timer = 0;
     while (state == false) {
       state = measureSensor(sensorArray[4], trigArray[4], minDistanceArray[4], maxDistanceArray[4]);
       timer = timer + 1;
-      if (timer > 140) {
+      if (timer > 500) {
         goto bailout;
       }
     }
@@ -169,6 +170,8 @@ BLYNK_WRITE(V15)
 {
   if (param.asInt() == 1) {
     Blynk.virtualWrite(trialPinArray[1], 0);
+    delay(100);
+    Blynk.virtualWrite(V15, 0);
   }
 }
 
@@ -176,6 +179,7 @@ BLYNK_WRITE(V16)
 {
   if (param.asInt() == 1) {
     Blynk.virtualWrite(trialPinArray[2], 0);
+    Blynk.virtualWrite(V16, 0);
   }
 }
 
@@ -183,6 +187,7 @@ BLYNK_WRITE(V17)
 {
   if (param.asInt() == 1) {
     Blynk.virtualWrite(trialPinArray[3], 0);
+    Blynk.virtualWrite(V17, 0);
   }
 }
 
