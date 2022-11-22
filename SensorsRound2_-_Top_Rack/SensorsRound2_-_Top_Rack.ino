@@ -20,14 +20,13 @@ int trigPin1 = D6;
 int trigPin2 = D7;
 int trigPin3 = D8;
 
-
 int sensorArray[] = {D0, D1, D2, D3, D4};
 int trigArray[] = {D5, D5, D6, D7, D8};
 int minDistanceArray[] = {8, 3, 0, 0, 10}; //Update distance
 int maxDistanceArray[] = {18, 13, 10, 10, 18}; //Update distance
 //change this for each team
 int virtualLEDPinArray[] = {V0, V1, V2, V3, V4};
-int trialPinArray[] = {V15, V5, V6, V7};
+int trialPinArray[] = {V99, V5, V6, V7};
 boolean state = false;
 int conditionalPoint = 0;
 int soundPoint = 0;
@@ -72,7 +71,7 @@ BLYNK_WRITE(V13)
       while (state == false) {
         state = measureSensor(sensorArray[i], trigArray[i], minDistanceArray[i], maxDistanceArray[i]);
         timer = timer + 1;
-        if (timer > 300) {
+        if (timer > 200) {
           goto bailout;
         }
       }
@@ -83,7 +82,7 @@ BLYNK_WRITE(V13)
       delay(1000);
     }
 
-    //Measure 3/44
+    //Measure 3/4
     state = false;
     timer = 0;
     while (state == false) {
@@ -97,9 +96,10 @@ BLYNK_WRITE(V13)
       state = (state == true || state3 == true);
       if (state3 == true)
       {
+        Blynk.virtualWrite(virtualLEDPinArray[3], 1);
       }
       timer = timer + 1;
-      if (timer > 400) {
+      if (timer > 250) {
         goto bailout;
       }
     }
@@ -112,7 +112,7 @@ BLYNK_WRITE(V13)
     while (state == false) {
       state = measureSensor(sensorArray[4], trigArray[4], minDistanceArray[4], maxDistanceArray[4]);
       timer = timer + 1;
-      if (timer > 500) {
+      if (timer > 200) {
         goto bailout;
       }
     }
@@ -121,10 +121,6 @@ BLYNK_WRITE(V13)
     state = false;
     delay(1000);
     Blynk.virtualWrite(trialPinArray[trial], point[trial]);
-    trial = trial + 1;
-    Blynk.virtualWrite(V13, 0);
-    Blynk.virtualWrite(V14, trial);
-
   }
 bailout:
   trial = trial + 1;
@@ -135,25 +131,25 @@ bailout:
 BLYNK_WRITE(V8)
 {
   conditionalPoint = param.asInt();
-  Blynk.virtualWrite(trialPinArray[trialBonus], point[trial] + conditionalPoint + soundPoint + sendPoint + receivePoint);
+  Blynk.virtualWrite(trialPinArray[trialBonus], point[trialBonus] + conditionalPoint + soundPoint + sendPoint + receivePoint);
 }
 
 BLYNK_WRITE(V9)
 {
   soundPoint = param.asInt();
-  Blynk.virtualWrite(trialPinArray[trialBonus], point[trial] + conditionalPoint + soundPoint + sendPoint + receivePoint);
+  Blynk.virtualWrite(trialPinArray[trialBonus], point[trialBonus] + conditionalPoint + soundPoint + sendPoint + receivePoint);
 }
 
 BLYNK_WRITE(V10)
 {
   sendPoint = param.asInt();
-  Blynk.virtualWrite(trialPinArray[trialBonus], point[trial] + conditionalPoint + soundPoint + sendPoint + receivePoint);
+  Blynk.virtualWrite(trialPinArray[trialBonus], point[trialBonus] + conditionalPoint + soundPoint + sendPoint + receivePoint);
 }
 
 BLYNK_WRITE(V11)
 {
   receivePoint = param.asInt();
-  Blynk.virtualWrite(trialPinArray[trialBonus], point[trial] + conditionalPoint + soundPoint + sendPoint + receivePoint);
+  Blynk.virtualWrite(trialPinArray[trialBonus], point[trialBonus] + conditionalPoint + soundPoint + sendPoint + receivePoint);
 }
 
 BLYNK_WRITE(V12)
@@ -169,6 +165,7 @@ BLYNK_WRITE(V14)
 BLYNK_WRITE(V15)
 {
   if (param.asInt() == 1) {
+    point[0] = 0;
     Blynk.virtualWrite(trialPinArray[1], 0);
     delay(100);
     Blynk.virtualWrite(V15, 0);
@@ -178,7 +175,9 @@ BLYNK_WRITE(V15)
 BLYNK_WRITE(V16)
 {
   if (param.asInt() == 1) {
+    point[1] = 0;
     Blynk.virtualWrite(trialPinArray[2], 0);
+    delay(100);
     Blynk.virtualWrite(V16, 0);
   }
 }
@@ -186,7 +185,9 @@ BLYNK_WRITE(V16)
 BLYNK_WRITE(V17)
 {
   if (param.asInt() == 1) {
+    point[2] = 0;
     Blynk.virtualWrite(trialPinArray[3], 0);
+    delay(100);
     Blynk.virtualWrite(V17, 0);
   }
 }
