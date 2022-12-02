@@ -1,6 +1,6 @@
-#define BLYNK_TEMPLATE_ID "TMPL2qt2fgnY"
-#define BLYNK_DEVICE_NAME "Competition Round 3 Team 1"
-#define BLYNK_AUTH_TOKEN "8-wAN95lGPAS3oUXRy33TcVriRzxxDbT"
+#define BLYNK_TEMPLATE_ID "TMPL-PIX42Lm"
+#define BLYNK_DEVICE_NAME "Competition Round 3 Team 2"
+#define BLYNK_AUTH_TOKEN "3ydFHbPGLl1UB7CtGETzUFWgaYU0idiy"
 #define BLYNK_PRINT Serial
 
 #include <ESP8266WiFi.h>
